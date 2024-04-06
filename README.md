@@ -4,7 +4,7 @@ Aula ao vivo 06/04
 
 https://kind.sigs.k8s.io/docs/user/quick-start/
 
-Copy
+```bash
 cat <<EOF | kind create cluster --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -26,12 +26,16 @@ nodes:
     hostPort: 443
     protocol: TCP
 EOF
+```
 
+```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+```
 
+```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.3/components.yaml
-
-
+```
+```bash
 spec:
   template:
     spec
@@ -44,7 +48,7 @@ spec:
         - --metric-resolution=15s
         - --kubelet-insecure-tls
         name: metrics-server
-
+```
 
 
 CKA ---- 
@@ -52,15 +56,18 @@ CKA ----
 1 - Adicione a taint NoSchedule em um dos nós e remova todos os pods em execução nesse nó 
 
 2 - Execute os seguintes comandos:
-    - kubectl create ns dr-teste
-    - kubectl run webserver -n dr-teste
+```bash
+kubectl create ns dr-teste
+kubectl run webserver -n dr-teste
+```
 
 Agora crie um backup do etcd, o backup deve ser feito no nó do control-plane no diretorio /tmp/pre-dr.db 
 
-
 Execute os seguintes comandos:
-    - kubectl delete ns dr-teste
-    - kubectl delete po webserver -n dr-teste
+```bash
+kubectl delete ns dr-teste
+kubectl delete po webserver -n dr-teste
+```
 
 Agora faça o restore no etcd e verifique se o namespace e o pod estão "Running"
 
@@ -69,6 +76,7 @@ Agora faça o restore no etcd e verifique se o namespace e o pod estão "Running
 4 - Crie um Pod chamado httpd com a imagem httpd:latest e porta 80
 
 5 - Crie um deployment com os seguintes items:
+```yaml
   * initContainers
     - image: busybox
     - command: /bin/sh -c echo "VAIIIII > /volume/initfile.txt"
@@ -80,6 +88,8 @@ Agora faça o restore no etcd e verifique se o namespace e o pod estão "Running
     - volumeMounts:
       * name: tempfile
       * /volume
+```
+
   * Utilize um volume do tipo emptyDir
 
 6 - Crie um cronjob com o schedule "*/1 * * * *" e executando o comando  'echo VAII' completions 5 e parallelism 5 e  um timeout de 15 segundos.
@@ -148,6 +158,7 @@ Deve utilizar o usuario 1001
 Não pode fazer a escalação de privilégios 
 E Dropar todas as capabilities
  
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -169,6 +180,7 @@ spec:
       - image: registry.kubesim.tech/development/production-app:latest
         name: ubuntu
         args: ["sleep", "10000"]
+```
 
 3 - Verifique as seguintes images e escreva no arquivos /tmp/vuln.txt a imagem que tiver mais vulnerabildiades
   - nginx:1.25.4-alpine3.18
